@@ -12,6 +12,7 @@ class SerialPort():
         self.serial_ref = serial.Serial(port=self.port, baudrate=self.baud)
         self.buffer = ""
         self.packets = []
+        self.joystick = XboxJoystick()
 
     def receive_message(self):
     	if (self.serial_ref.in_waiting > 0):
@@ -36,13 +37,13 @@ class SerialPort():
     	return result;
 
 class Robot(SerialPort):
-    joystick_map = {}
     def __init__(self, port, legs, packet_ending = '\n', baud = 115200):
         super().__init__(baud, port, packet_ending)
         self.legs = legs
         self.running = True
         self.listening = True
         self.data_q = []
+        self.joystick = RoboJoystick()
 
     def run():
         while self.running:
@@ -51,5 +52,20 @@ class Robot(SerialPort):
             while (len(self.data_q) > 0):
                 current_data = data_q.pop(0)
                 #TODO Take decisions based on actions
-            read_joystick()
+            if self.joystick.button_updated("A"):
+                pass #Toggle Gait
+            if self.joystick.button_updated("B"):
+                pass #adjust height mode
+            if self.joystick.button_udpated("X"):
+                pass #toggle tilting
+            if self.joysick.button_udpated("Y"):
+                pass #single leg mode
+            if self.joystick.axis_updated("right X") or
+               self.joystick.axis_updated("right Y"):
+                pass #Rotate
+            if self.joystick.axis_updated("left X") or
+               self.joystick.axis_updated("left R"):
+               pass #move forward backward to the left or right
+            
+
 

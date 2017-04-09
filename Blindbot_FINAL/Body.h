@@ -1,6 +1,4 @@
 #include "Robot.h"
-#include "A1_16.h"
-#include "utility_functions.h"
 #include "Leg.h"
 #include "Gait.h"
 #ifndef _BODY_H_
