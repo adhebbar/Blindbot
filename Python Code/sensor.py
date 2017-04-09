@@ -10,23 +10,25 @@ class SerialPort():
 		self.baud = baud
         self.serial_ref = serial.Serial(port=self.port, baudrate=self.baud)
         self.buffer = ""
-        self.packets
+        self.packets = []
 
     def receive_message():
     	if (self.serial_ref.in_waiting > 0):
-    		message = self.serial_ref.read(self.serial_ref.in_waiting)
-    		if self.buffer != "":
-
-    		if message[-1] != '\n':
+    		message = self.serial_ref.read(self.serial_ref.in_waiting).decode("utf-8")
+    		recovered_packet = ""
+            if self.buffer != "":
+                recovered_packet = self.buffer
+    		if message[-1] != self.packet_ending:
     			self.buffer = 
     		packets = message.split(self.packet_ending)
-    		#do something to remove leftover
+            if recovered_packet != "": packets.insert(0,recovered_packet)
+            self.packets = self.packets + packets
     		return packets
     	else 
     		return None
 
     def send_message(message):
-    	message.decode("utf-8")
+    	message.encode("utf-8")
     	result = self.serial_ref.write(message)
     	return result;
 
