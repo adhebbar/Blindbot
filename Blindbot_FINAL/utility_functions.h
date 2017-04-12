@@ -2,6 +2,7 @@
 #include "Robot.h"
 #ifndef _UTILITY_H_
 #define _UTILITY_H_
+#define PRECISION 10
 int convert_angle(float angle);
 int convert_angle(float angle, float lower, float upper);
 float mapfloat(float x, float in_min, float in_max, float out_min, float out_max);
@@ -12,4 +13,5 @@ void centroid_polygon(float* cx, float* cy,float x_coords[], float y_coords[], i
 void centroid_triangle(float* cx, float* cy, float x_coords[], float y_coords[], int legs);
 float convert_to_kg(float forces[],int num_legs);
 float convert_force(int force);
+void get_coords(char* command, float& dx, float& dy, float& dz);
 #endif

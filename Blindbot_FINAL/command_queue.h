@@ -6,13 +6,13 @@ class C_Queue{
 	int capacity;
 	int front;
 	int back;
-	String* command_q;
+	char** command_q;
 	public:
 		C_Queue(int capacity);
-		String deq();
-		void enq(String elem);
+		char* deq();
+		void enq(char* elem);
 		int queue_size();
 		int queue_capacity();
-		String queue_peek(int index);
+		char* queue_peek(int index);
 };
 #endif

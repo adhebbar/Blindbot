@@ -4,7 +4,7 @@
 #ifndef _BODY_H_
 #define _BODY_H_
 
-enum Modes { LEGS = 1, GAIT = 2, BODY = 3, LOCK = 4};
+enum Modes { LEGS = 1, GAIT = 2, BODY = 3, LOCK = 4, GAIT_AUTO = 5};
 class Body{
     const int centroid_threshold;
     int num_legs;
@@ -21,6 +21,7 @@ class Body{
     float ax, ay, az;
     Gait gait;
     Modes mode;
+    int leg_current;
     public:
         Body(int servos[], HardwareSerial& serial, HardwareSerial& serial1, 
              HardwareSerial& serial2, HardwareSerial& serial3);
@@ -29,8 +30,7 @@ class Body{
         int read_force_leg(int leg);
         void set_gait(Gait gait);
         void gait_next();    
-        String read_command();
-        void send_message(String message);
+        void send_message(char* message);
         void send_pose();
         void balance();
         void balance_triangle();
@@ -48,5 +48,9 @@ class Body{
         void rotate_leg(float x1, float x2, int leg);
         void set_mode(int i);
         int get_mode();
+
+        //WORK IN PROGRESS JOYSTICK COMMANDS
+        void joystick_command(char* command, int start);
+        void joystick_movement(char* command);
 };
 #endif

@@ -43,7 +43,7 @@ class Robot(SerialPort):
         self.running = True
         self.listening = True
         self.data_q = []
-        self.joystick = RoboJoystick()
+        self.joystick = RoboJoystick([1,2,3])
 
     def run():
         while self.running:
@@ -53,13 +53,13 @@ class Robot(SerialPort):
                 current_data = data_q.pop(0)
                 #TODO Take decisions based on actions
             if self.joystick.button_updated("A"):
-                pass #Toggle Gait
+                self.send_message("SetA")
             if self.joystick.button_updated("B"):
-                pass #adjust height mode
+                self.send_message("SetB")
             if self.joystick.button_udpated("X"):
-                pass #toggle tilting
+                self.send_message("SetX")
             if self.joysick.button_udpated("Y"):
-                pass #single leg mode
+                self.send_message("SetY")
             if self.joystick.axis_updated("right X") or
                self.joystick.axis_updated("right Y"):
                 pass #Rotate

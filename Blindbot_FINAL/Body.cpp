@@ -83,7 +83,7 @@ void Body::rotate_y(int d_theta){
 //Shifts center of the body by specified offset
 //Body should be stationary
 void Body::shift(float dx, float dy){
-    if (!this->locked){
+    if (mode == BODY){
         float right_x1 = legs[0].current_x;
         float left_x1 = legs[3].current_x;
         float front_z1 = legs[0].current_z;
@@ -112,11 +112,6 @@ void Body::gait_next(){
 }
 
 /* COMMUNICATION */
-
-String Body::read_command(){
-    String result = Serial.readStringUntil("\n");
-    return result;
-}
 
 void Body::read_IMU(){
     Serial.println("IMU");
@@ -171,6 +166,39 @@ int Body::get_mode(){
     return mode;
 }
 
-void Body::joystick_command(String command){
-    
+void Body::joystick_command(char* command, int start){
+    if (command[start] == "A")
+        mode = GAIT;
+    else if (command[start] == "B")
+        mode = GAIT_AUTO;
+    else if (command[start] == "X")
+        mode = BODY;
+    else if (command[start] == "Y")
+        mode = LEGS;
+    else if (command[start] = "L")
+        return;//unmapped
+    else if (command[start] == "R")
+        return;//unmapped
+    else{
+        return;
+    }
+}
+
+void Body::joystick_movement(char* command){
+    float dx, dy, dz;
+    if(mode != GAIT){
+        get_coords(command, dx, dy, dz);
+    }
+    if (mode == LEGS){
+        float x_pos = x_coords[leg_current] + dx;
+        float y_pos = y_coords[leg_current] + dy;
+        float z_pos = z_coords[leg_current] + dz;
+        set_position_leg(leg_current, x_pos, y_pos, z_pos);
+    }
+    else if (mode == BODY){
+        shift(dx,dy);
+    }
+    else if (mode == GAIT){
+        gait_next();
+    }
 }
