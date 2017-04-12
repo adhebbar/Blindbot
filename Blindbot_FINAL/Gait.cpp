@@ -6,7 +6,7 @@ Gait::Gait(int num_gait_steps, int cycle, float leg_height, float walk_length){
 	walk_length = walk_length;
 	leg_height = leg_height;
 	leg = 1;
-  gait_step = 1;
+  	gait_step = 1;
 }
 
 int Gait::next(float coords[]){

@@ -15,7 +15,7 @@ legs({{int(servos[3*0]),int(servos[1+3*0]),int(servos[2+3*0]), 0, serial, A0, 0}
       {int(servos[3*2]),int(servos[1+3*2]),int(servos[2+3*2]), 2, serial2, A0, 0}, 
       {int(servos[3*3]),int(servos[1+3*3]),int(servos[2+3*3]), 3, serial3, A0, 0}})
 {
-	this->locked = false;
+    mode = LOCK;
 	/*for (int i = 0; i < 4; i ++){
 		switch(i){
 			case 0: legs[i] = Leg();
@@ -29,7 +29,7 @@ legs({{int(servos[3*0]),int(servos[1+3*0]),int(servos[2+3*0]), 0, serial, A0, 0}
 
 void Body::update_self(){
     float coord_buff[3];
-    if (!locked) gait_next();
+    if (mode == GAIT) gait_next();
     //read_IMU();
     for (int i = 0; i < num_legs; i++){
         legs[i].update_self(false);
@@ -161,4 +161,16 @@ void Body::set_position_leg(int leg, float x, float y, float z){
 void Body::set_angle_leg(int leg, int cox, int femur, int tibia){
     legs[leg].set_angles(cox, femur, tibia);
     legs[leg].update_angles();
+}
+
+void Body::set_mode(int i){
+    mode = i;
+}
+
+int Body::get_mode(){
+    return mode;
+}
+
+void Body::joystick_command(String command){
+    
 }

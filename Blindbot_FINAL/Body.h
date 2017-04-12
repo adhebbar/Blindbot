@@ -3,6 +3,8 @@
 #include "Gait.h"
 #ifndef _BODY_H_
 #define _BODY_H_
+
+enum Modes { LEGS = 1, GAIT = 2, BODY = 3, LOCK = 4};
 class Body{
     const int centroid_threshold;
     int num_legs;
@@ -18,7 +20,7 @@ class Body{
     float abs_x, abs_y, abs_z; //absolute position
     float ax, ay, az;
     Gait gait;
-    bool locked;
+    Modes mode;
     public:
         Body(int servos[], HardwareSerial& serial, HardwareSerial& serial1, 
              HardwareSerial& serial2, HardwareSerial& serial3);
@@ -44,5 +46,7 @@ class Body{
         void rotate_y(int d_theta);
         void shift(float dx, float dy);
         void rotate_leg(float x1, float x2, int leg);
+        void set_mode(int i);
+        int get_mode();
 };
 #endif
