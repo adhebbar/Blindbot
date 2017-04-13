@@ -109,15 +109,18 @@ void Leg::IK (float x, float y, float z, float answer[],
       tibia_angle += pi;
    }
    answer[0] = convert_angle(cox_angle);
-   print_val("Coxa ",cox_angle);
    answer[1] = convert_angle(femur_angle);
-   print_val("Femur ", femur_angle);
    answer[2] = convert_angle(tibia_angle,0.0, 2*pi);
-   print_val("Tibia ",tibia_angle);
    if(update)
    {
 		set_position(x,y,z);
 		move_to_angles(answer[0], answer[1], answer[2]);
+   }
+   if (debug_prints){
+        print_val("Coxa ",cox_angle);
+        print_val("Femur ", femur_angle);
+        print_val("Tibia ",tibia_angle);
+
    }
 }
 

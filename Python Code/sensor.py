@@ -37,6 +37,11 @@ class SerialPort():
     	return result;
 
 class Robot(SerialPort):
+    LEGS = 1
+    GAIT = 2
+    BODY = 3
+    LOCK = 4
+    GAIT_AUTO = 5
     def __init__(self, port, legs, packet_ending = '\n', baud = 115200):
         super().__init__(baud, port, packet_ending)
         self.legs = legs
@@ -44,8 +49,10 @@ class Robot(SerialPort):
         self.listening = True
         self.data_q = []
         self.joystick = RoboJoystick([1,2,3])
+        self.state = self.LEGS
 
     def run():
+        coords_available = False
         while self.running:
             if self.listening:
                 self.data_q = self.data_q + self.receive_message()
@@ -54,17 +61,34 @@ class Robot(SerialPort):
                 #TODO Take decisions based on actions
             if self.joystick.button_updated("A"):
                 self.send_message("SetA")
-            if self.joystick.button_updated("B"):
+                self.state = self.GAIT
+            elif self.joystick.button_updated("B"):
                 self.send_message("SetB")
-            if self.joystick.button_udpated("X"):
+                self.state = self.GAIT_AUTO
+            elif self.joystick.button_udpated("X"):
                 self.send_message("SetX")
-            if self.joysick.button_udpated("Y"):
+                self.state = self.BODY
+            elif self.joysick.button_udpated("Y"):
                 self.send_message("SetY")
-            if self.joystick.axis_updated("right X") or
-               self.joystick.axis_updated("right Y"):
-                pass #Rotate
-            if self.joystick.axis_updated("left X") or
-               self.joystick.axis_updated("left R"):
+                self.state = self.LEGS
+            else:
+                self.send_message("SetLB")
+                self.state = self.LOCK
+            elif self.joystick.axis_updated("RA_X") or
+                self.joystick.axis_updated("RA_Y"):
+                coords_available = True
+                if self.state == self.GAIT:
+                    self.send_message("MOVE")
+                elif self.state == self.LEGS:
+                    pass
+                elif self.state == self.BODY:
+                    pass
+                else
+            return
+
+
+            if self.joystick.axis_updated("LA_X") or
+               self.joystick.axis_updated("LA_Y"):
                pass #move forward backward to the left or right
             
 

@@ -147,10 +147,10 @@ void Body::send_pose(){
 
 void Body::set_position_leg(int leg, float x, float y, float z){
     float answer[3];
-    if (x == -1000) x = x_coords[leg];
-    if (y == -1000) y = y_coords[leg];
-    if (z == -1000) z = z_coords[leg];
-    legs[leg].IK(x,y,z, false, answer, true);
+    //if (x == -1000) x = x_coords[leg];
+    //if (y == -1000) y = y_coords[leg];
+    //if (z == -1000) z = z_coords[leg];
+    legs[leg].IK(x,y,z, answer, false, true);
 }
 
 void Body::set_angle_leg(int leg, int cox, int femur, int tibia){
@@ -175,7 +175,7 @@ void Body::joystick_command(char* command, int start){
         mode = BODY;
     else if (command[start] == "Y")
         mode = LEGS;
-    else if (command[start] = "L")
+    else if (command[start] = "LB")
         return;//unmapped
     else if (command[start] == "R")
         return;//unmapped
