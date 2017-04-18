@@ -5,7 +5,8 @@
 //Implementation
 //Constructor
 Leg::Leg(int cox_servo, int femur_servo, int tibia_servo, int leg_ID, 
-			  HardwareSerial& serial, const uint8_t softpot_pin, int force_pin):
+			  HardwareSerial& serial, const uint8_t softpot_pin, int force_pin,
+			  bool inverted_cox, bool inverted_femur, bool inverted_tibia):
 myserial(serial)
 {
 	this->cox_servo = cox_servo;
@@ -14,6 +15,9 @@ myserial(serial)
 	this->leg_ID = leg_ID;
 	this->softpot_pin = softpot_pin;
 	this->force_pin = force_pin;
+  this->inverted_cox = inverted_cox;
+  this->inverted_femur = inverted_femur;
+  this->inverted_tibia = inverted_tibia;
 }
 
 void Leg::FK (float answer[], bool debug_prints){
@@ -90,7 +94,7 @@ void Leg::IK (float x, float y, float z, float answer[],
     return;
    float L = sqrt(x*x+z*z);
    float HF = sqrt(y*y + (L - COX_LEN)*(L-COX_LEN));
-   float alpha1 = atan2((L-COX_LEN),abs(y));
+   float alpha1 = atan2((L-COX_LEN),y);
    float alpha2 = acos((HF*HF + FEMUR_LEN*FEMUR_LEN - TIBIA_LEN*TIBIA_LEN)/(2*HF*FEMUR_LEN));
    float femur_angle = pi/2 - (alpha1 + alpha2); 
    float beta_denom = (2*FEMUR_LEN*TIBIA_LEN);
@@ -120,7 +124,6 @@ void Leg::IK (float x, float y, float z, float answer[],
         print_val("Coxa ",cox_angle);
         print_val("Femur ", femur_angle);
         print_val("Tibia ",tibia_angle);
-
    }
 }
 
@@ -147,13 +150,19 @@ void Leg::get_angles(int answer[]){
 }
 
 void Leg::update_angles(){
-	int cox_angle = ReadPosition_serial(cox_servo, myserial);
-	int femur_angle = ReadPosition_serial(femur_servo, myserial);
-	int tibia_angle = ReadPosition_serial(tibia_servo, myserial);
+  this->cox_angle = ReadPosition_serial(cox_servo, myserial);
+	this->femur_angle = ReadPosition_serial(femur_servo, myserial);
+	this->tibia_angle = ReadPosition_serial(tibia_servo, myserial);
 }
 
 //Moves the leg to the desired angles
 void Leg::move_to_angles(int angle1, int angle2, int angle3){
+  if(this->inverted_cox)
+     angle1 = map(angle1,0,1024,1024,0);
+  if(this->inverted_femur)
+     angle2 = map(angle2,0,1024,1024,0);
+  if(this->inverted_tibia)   
+     angle3 = map(angle3,0,1024,1024,0);
 	if(angle1 != -1) cox_angle = angle1;
 	if(angle2 != -1) femur_angle = angle2;
 	if(angle3 != -1) tibia_angle = angle3;

@@ -143,7 +143,7 @@ int A1_16_ReadData(unsigned char _pID, unsigned char _CMD, unsigned char _addr_s
 int A1_16_ReadData_s(unsigned char _pID, unsigned char _CMD, unsigned char _addr_start, unsigned char _data_length,
                      HardwareSerial& serial)
 {
-  while(Serial1.read() != -1);
+  while(serial.read() != -1);
   checksum_1 = (9^_pID^_CMD^_addr_start^_data_length)&0xfe;
   checksum_2 = (~checksum_1)&0xfe;
   serial.write(0xff);
@@ -155,9 +155,47 @@ int A1_16_ReadData_s(unsigned char _pID, unsigned char _CMD, unsigned char _addr
   serial.write(checksum_2);
   serial.write(_addr_start);
   serial.write(_data_length);      //length of data
-  int value = A1_16_ReadPacket(_data_length);
+  int value = A1_16_ReadPacket(_data_length, serial);
   return value;
 }
+
+int A1_16_ReadPacket(unsigned char _data_length, HardwareSerial& serial){
+  unsigned char packet_length = 11 + _data_length;
+  unsigned char packet_pointer = 0;
+  unsigned char _i;
+  unsigned int timeout_counter;
+  unsigned char header_check = 0;
+  
+  while (packet_pointer < packet_length){
+  timeout_counter = 0;
+  while(serial.available() <= 0){
+    timeout_counter++;
+    if(timeout_counter > 1000L) return -1;
+  }
+  packet_received[packet_pointer] = serial.read();
+  if((packet_received[packet_pointer] == 0xff) && (header_check == 0)){
+    packet_pointer++;
+    header_check = 1;
+  }
+  else if((packet_received[packet_pointer] == 0xff) && (header_check == 1)){
+    packet_pointer++;
+    header_check = 2;
+  }
+  else if(header_check == 2){
+    packet_pointer++;
+  }
+  }
+  
+  checksum_1 = packet_received[2]^packet_received[3]^packet_received[4];
+  for(_i = 7;_i < packet_length;_i++) checksum_1 ^= packet_received[_i];
+  checksum_1 &= 0xfe;
+  checksum_2 = (~checksum_1)&0xfe;
+  if(checksum_1 != packet_received[5]) return -2;
+  if(checksum_2 != packet_received[6]) return -3;
+  if(_data_length != 1) return (packet_received[11] + (packet_received[12]<<8));
+  else return packet_received[11];
+}
+
 
 int A1_16_ReadPacket(unsigned char _data_length){
   unsigned char packet_length = 11 + _data_length;

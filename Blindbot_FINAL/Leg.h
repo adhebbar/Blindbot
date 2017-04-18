@@ -8,11 +8,13 @@ class Leg{
 	int leg_ID, gait_step;
 	int force_pin, softpot_pin;
 	int force_val, soft_val;
+  bool inverted_cox, inverted_femur, inverted_tibia;
 	public:
 		HardwareSerial& myserial;
     Leg(HardwareSerial& serial): myserial(serial){}
     Leg(int cox_servo, int femur_servo, int tibia_servo, int leg_ID, 
-       HardwareSerial& serial, const uint8_t softpot_pin, int force_pin);
+       HardwareSerial& serial, const uint8_t softpot_pin, int force_pin,
+       bool inverted_cox, bool inverted_femur, bool inverted_tibia);
 		float current_x, current_y, current_z;
 		void set_position(float x, float y, float z);
 		void get_position(float result[]);

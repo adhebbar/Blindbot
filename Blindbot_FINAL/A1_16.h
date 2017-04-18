@@ -227,6 +227,7 @@ void A1_16_TorqueOff(unsigned char _pID);
 int A1_16_ReadData(unsigned char _pID, unsigned char _CMD, unsigned char _addr_start, unsigned char _data_length);
 int A1_16_ReadData_s(unsigned char _pID, unsigned char _CMD, unsigned char _addr_start, unsigned char _data_length, HardwareSerial& serial);
 int A1_16_ReadPacket(unsigned char _data_length);
+int A1_16_ReadPacket(unsigned char _data_length, HardwareSerial &serial);
 void A1_16_WriteData(unsigned char _pID, unsigned char _CMD, unsigned char _addr_start, char _data_write);
 void A1_16_WriteData2(unsigned char _pID, unsigned char _CMD, unsigned char _addr_start, int _data_write);
 void A1_16_Basic(unsigned char _pID, unsigned char _CMD);
