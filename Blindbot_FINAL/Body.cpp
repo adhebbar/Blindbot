@@ -154,8 +154,7 @@ void Body::set_position_leg(int leg, float x, float y, float z){
 }
 
 void Body::set_angle_leg(int leg, int cox, int femur, int tibia){
-    legs[leg].set_angles(cox, femur, tibia);
-    legs[leg].update_angles();
+    legs[leg].move_to_angles(cox,femur,tibia);
 }
 
 void Body::set_mode(int i){

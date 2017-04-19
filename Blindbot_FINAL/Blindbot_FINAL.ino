@@ -13,7 +13,7 @@
 #define COMMAND_SIZE 50
 
 int servos[] = {0x01,0x02,0x03,
-                        0x04,0x05,0x07,
+                        0x04,0x05,0x06,
                         0x07,0x08,0x09,
                         0x0A,0x0B,0x0C};
 int message_index = 0;
@@ -44,8 +44,9 @@ void setup() {
     //leg4.IK(23.0, 0.0, 0, answer, 
     //    false, true);
     //delay(5000);
-    test();
+    //test();
     //leg3.IK(14,0,-5,answer, true, true);
+    body.set_angle_leg(3, 512, 512, 768);
 }
 
 void loop() {
@@ -81,21 +82,21 @@ void loop() {
 }
 
 void test(){
-    body.set_position_leg(0, 17.0, 2.0, 10.0);
+    body.set_position_leg(0, 12.0, 10.0, 10.0);
     delay(100);
-    body.set_position_leg(1, 17.0, 2.0, -10.0);
+    body.set_position_leg(1, 12.0, 10.0, -10.0);
     delay(100);
-    body.set_position_leg(2, 17.0, 2.0, -10.0);
+    body.set_position_leg(2, 12.0, 10.0, -10.0);
     delay(100);
-    body.set_position_leg(3, 17.0, 2.0, 10.0);
+    body.set_position_leg(3, 12.0, 10.0, 10.0);
     delay(2000);
-    body.set_position_leg(0, 10.0, 5.0, 10.0);
+    body.set_position_leg(0, 12.0, 7.0, 10.0);
     delay(100);
-    body.set_position_leg(1, 10.0, 5.0, -10.0);
+    body.set_position_leg(1, 12.0, 7.0, -10.0);
     delay(100);
-    body.set_position_leg(2, 10.0, 5.0, -10.0);
+    body.set_position_leg(2, 12.0, 7.0, -10.0);
     delay(100);
-    body.set_position_leg(3, 10.0, 5.0, 10.0);
+    body.set_position_leg(3, 12.0, 7.0, 10.0);
     delay(3000);
     //body.set_position_leg(0, COX_LEN+FEMUR_LEN, -TIBIA_LEN ,0.0);
     //body.set_position_leg(1, COX_LEN+FEMUR_LEN, -TIBIA_LEN ,0.0);

@@ -25,7 +25,6 @@ class Leg{
     void FK (float answer[], bool debug_prints);
 		void normal_foot(int pos, int playtime);
 		void move_to_angles(int angle1, int angle2, int angle3);
-		void set_angles(int cox, int femur, int tibia);
 		void get_angles(int answer[]);
     void acknowledge();
 		void update_angles();	
