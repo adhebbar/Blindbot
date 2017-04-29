@@ -10,10 +10,10 @@
 
 Body::Body(int* servos, HardwareSerial& serial, HardwareSerial& serial1, 
 		   HardwareSerial& serial2, HardwareSerial& serial3):
-legs({{int(servos[3*0]),int(servos[1+3*0]),int(servos[2+3*0]), 0, serial, A0, 0,true,false,true},
-      {int(servos[3*1]),int(servos[1+3*1]),int(servos[2+3*1]), 1, serial1, A0, 0,true,true,false},
-      {int(servos[3*2]),int(servos[1+3*2]),int(servos[2+3*2]), 2, serial2, A0, 0,false,false,true}, 
-      {int(servos[3*3]),int(servos[1+3*3]),int(servos[2+3*3]), 3, serial3, A0, 0, false, true, true}})
+legs({{int(servos[3*0]),int(servos[1+3*0]),int(servos[2+3*0]), 0, serial, A0, 0,true,true,true},
+      {int(servos[3*1]),int(servos[1+3*1]),int(servos[2+3*1]), 1, serial1, A0, 0,true,false,false},
+      {int(servos[3*2]),int(servos[1+3*2]),int(servos[2+3*2]), 2, serial2, A0, 0,false,true,true}, 
+      {int(servos[3*3]),int(servos[1+3*3]),int(servos[2+3*3]), 3, serial3, A0, 0, false, false, false}})
 {
     mode = LOCK;
 	/*for (int i = 0; i < 4; i ++){

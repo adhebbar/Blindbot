@@ -30,23 +30,8 @@ void setup() {
     Serial1.begin(DEFAULT_BAUD);
     Serial2.begin(DEFAULT_BAUD);
     Serial3.begin(DEFAULT_BAUD);
-    //delay(5000);
     float answer[3];
-    //delay(500);
-    //leg1.IK(17.0, 2.0, 10.0, answer, 
-    //    false, true);
-    //leg2.IK(17.0, 2.0, -10.0, answer, 
-    //    false, true);
-    //delay(500);
-    //leg3.IK(17.0, 2.0, -10.0, answer, 
-    //   true, true);
-    //delay(500);
-    //leg4.IK(23.0, 0.0, 0, answer, 
-    //    false, true);
-    //delay(5000);
-    //test();
-    //leg3.IK(14,0,-5,answer, true, true);
-    body.set_angle_leg(3, 512, 512, 768);
+    test();
 }
 
 void loop() {
@@ -73,7 +58,6 @@ void loop() {
     {
       char* command = Q.deq();
       int i = 0;
-      
       delete(command);
       
     }
@@ -82,21 +66,21 @@ void loop() {
 }
 
 void test(){
-    body.set_position_leg(0, 12.0, 10.0, 10.0);
-    delay(100);
-    body.set_position_leg(1, 12.0, 10.0, -10.0);
-    delay(100);
-    body.set_position_leg(2, 12.0, 10.0, -10.0);
-    delay(100);
-    body.set_position_leg(3, 12.0, 10.0, 10.0);
+    body.set_position_leg(0, 60.0, 176.0, 0.0);
+    //delay(100);
+    body.set_position_leg(1, 60.0, 176.0, 0.0);
+    //delay(100);
+    body.set_position_leg(2, 60.0, 176.0, 0.0);
+    //delay(100);
+    body.set_position_leg(3, 60.0, 176.0, 0.0);
     delay(2000);
-    body.set_position_leg(0, 12.0, 7.0, 10.0);
-    delay(100);
-    body.set_position_leg(1, 12.0, 7.0, -10.0);
-    delay(100);
-    body.set_position_leg(2, 12.0, 7.0, -10.0);
-    delay(100);
-    body.set_position_leg(3, 12.0, 7.0, 10.0);
+    body.set_position_leg(0, 80.0, 160.0, 0.0);
+    //delay(100);
+    body.set_position_leg(1, 80.0, 160.0, 0.0);
+    //delay(100);
+    body.set_position_leg(2, 80.0, 160.0, 0.0);
+    //delay(100);
+    body.set_position_leg(3, 80.0, 160.0, 0.0);
     delay(3000);
     //body.set_position_leg(0, COX_LEN+FEMUR_LEN, -TIBIA_LEN ,0.0);
     //body.set_position_leg(1, COX_LEN+FEMUR_LEN, -TIBIA_LEN ,0.0);

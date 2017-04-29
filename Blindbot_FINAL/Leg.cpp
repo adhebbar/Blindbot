@@ -96,8 +96,8 @@ void Leg::IK (float x, float y, float z, float answer[],
    float HF = sqrt(y*y + (L - COX_LEN)*(L-COX_LEN));
    float alpha1 = atan2((L-COX_LEN),y);
    float alpha2 = acos((HF*HF + FEMUR_LEN*FEMUR_LEN - TIBIA_LEN*TIBIA_LEN)/(2*HF*FEMUR_LEN));
-   float femur_angle = (alpha1 + alpha2)-pi/2; 
-   float beta_denom = (2*FEMUR_LEN*TIBIA_LEN);
+   float femur_angle = pi/2.0 - (alpha1 + alpha2); 
+   float beta_denom = (2.0*FEMUR_LEN*TIBIA_LEN);
    float beta_num = FEMUR_LEN*FEMUR_LEN+TIBIA_LEN*TIBIA_LEN-HF*HF;
    float beta = acos(beta_num/beta_denom);
    if(debug_prints){

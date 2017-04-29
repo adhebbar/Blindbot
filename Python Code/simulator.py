@@ -27,7 +27,7 @@ class Simulator:
 		beta = np.degrees(np.arccos((HF**2 - self.tibia_len**2 - self.femur_len**2)/
 			                        (-2.0 * self.femur_len * self.tibia_len)))
 		print(beta)
-		self.tibia_angle = 90 - beta
+		self.tibia_angle = 90 - beta 
 
 	def FK(self):
 		pass
@@ -59,8 +59,8 @@ class Simulator:
 		plt.plot(x_points, y_points)
 		plt.show()
 
-sim = Simulator(8.0,8.0,7.0,60.0,30.0,30.0)
-sim.IK(15.0,5.0,10.0)
+sim = Simulator(60.0,83.0,93.0,60.0,30.0,30.0)
+sim.IK(150.0,70.0,0.0)
 sim.calculate_coords()
 sim.plot()
 user = "Yes"
