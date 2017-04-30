@@ -9,7 +9,7 @@
 /* IMPLEMENTATION */
 
 Body::Body(int* servos, HardwareSerial& serial, HardwareSerial& serial1, 
-		   HardwareSerial& serial2, HardwareSerial& serial3):
+		   HardwareSerial& serial2, HardwareSerial& serial3, bool joystick_connected = false):
 legs({{int(servos[3*0]),int(servos[1+3*0]),int(servos[2+3*0]), 0, serial, A0, 0,true,true,true},
       {int(servos[3*1]),int(servos[1+3*1]),int(servos[2+3*1]), 1, serial1, A0, 0,true,false,false},
       {int(servos[3*2]),int(servos[1+3*2]),int(servos[2+3*2]), 2, serial2, A0, 0,false,true,true}, 
@@ -25,7 +25,7 @@ legs({{int(servos[3*0]),int(servos[1+3*0]),int(servos[2+3*0]), 0, serial, A0, 0,
 		}
 	}*/
   gait = Gait(20, 75.0, 145.0, 74.0);
-  /*float coord_buff[3];
+  float coord_buff[3];
   for (int i = 0; i < num_legs; i++){
     legs[i].update_self(false);
     legs[i].get_position(coord_buff);
@@ -33,12 +33,14 @@ legs({{int(servos[3*0]),int(servos[1+3*0]),int(servos[2+3*0]), 0, serial, A0, 0,
     y_coords[i] = coord_buff[1];
     z_coords[i] = coord_buff[2];
   }
-  */
+  joystick = joystick_connected;
   //update_self();
 }
 
 void Body::update_self(){
-    if(mode == GAIT) gait_next();
+    if(mode == GAIT && !joystick) gait_next();
+    if(mode == BODY && !joystick) rotate_y(0.1);
+
     //read_IMU();
 
     //calculate_tilt();
@@ -80,8 +82,10 @@ void Body::rotate_y(int d_theta){
     float alpha = tan(z0/x0);
     float x1 = sqrt((R*R)/(1+tan(alpha+d_theta)*tan(alpha+d_theta)));
     float z1 = sqrt(R*R - x1*x1);
-    return x1, z1; //New coords for leg
+    return x1 - XOFF, z1-YOFF; //New coords for leg
 }
+
+
 
 //Shifts center of the body by specified offset
 //Body should be stationary
@@ -95,17 +99,16 @@ void Body::shift(float dx, float dy){
         left_x1 += dx;
         front_z1 += dy;
         back_z1 += dy;
-        set_position_leg(0, right_x1, -1000, front_z1);
-        set_position_leg(1, right_x1, -1000, back_z1);
-        set_position_leg(2, left_x1, -1000, back_z1);
-        set_position_leg(3, left_x1, -1000, front_z1);
+        set_position_leg(0, right_x1, y_coords[0], front_z1);
+        set_position_leg(1, right_x1, y_coords[1], back_z1);
+        set_position_leg(2, left_x1, y_coords[2], back_z1);
+        set_position_leg(3, left_x1, y_coords[3], front_z1);
     }
 }
 
 //Converts to other leg frames
 void Body::rotate_leg(float x1, float x2, int leg){
-    //Will take the result of rotate and apply it to the given leg
-    //Come up with formula pls
+    if(leg == )
 }
 
 void Body::gait_next(){

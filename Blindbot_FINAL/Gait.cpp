@@ -22,25 +22,21 @@ int Gait::next(float coords[]){
   		gait_step++;
   	}
   	else if(gait_step == 2 && leg_index == leg){
-  		legs[leg].y = leg_height/2.0;
+  		legs[leg].y = leg_height*0.5;
   		legs[leg].z = 0;
   		gait_step++;
   	}
   	else if(gait_step == 3 && leg_index == leg){
   		legs[leg].y = leg_height*0.75;
-  		legs[leg].z = walk_length/2.0;
+  		legs[leg].z = walk_length*0.5;
   		gait_step++;
   	}
   	else if (gait_step == 4 && leg_index == leg){
-      legs[leg].z = walk_length;
   		legs[leg].y = leg_height;
   		gait_step++;
   	}
   	else if(leg_index != leg && (first_gait||(leg_index < leg&& leg_index != 0)))
-  	{
-      legs[leg_index].z -= walk_length/cycle*2.0;
-  		gait_step++;
-  	}
+      legs[leg_index].z -= walk_length/cycle;
   	if (gait_step > cycle/4){
   		cycle_leg();
   		gait_step = 1;

@@ -22,9 +22,10 @@ class Body{
     Gait gait;
     Modes mode;
     int leg_current;
+    bool joystick;
     public:
         Body(int servos[], HardwareSerial& serial, HardwareSerial& serial1, 
-             HardwareSerial& serial2, HardwareSerial& serial3);
+             HardwareSerial& serial2, HardwareSerial& serial3, bool joystick_connected = false);
         void set_position_leg(int leg, float x, float y, float z, bool no_x = false);
         void set_angle_leg(int leg, int cox_angle, int femur_angle, int tibia_angle);
         int read_force_leg(int leg);

@@ -18,6 +18,7 @@
 //body constants
 #define XOFF 9.43
 #define YOFF 12.04
+#define Z_ZERO 30
 //useful constants
 #define pi 3.14159265
 #endif
