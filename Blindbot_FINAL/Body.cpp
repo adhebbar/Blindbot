@@ -24,7 +24,7 @@ legs({{int(servos[3*0]),int(servos[1+3*0]),int(servos[2+3*0]), 0, serial, A0, 0,
 			case 3: legs[i] = Leg(int(servos[3*i]),int(servos[1+3*i]),int(servos[2+3*i]), int(i), serial3, A0, 0);
 		}
 	}*/
-  gait = Gait(20, 75.0, 145.0, 74.0);
+  gait = Gait(20, 75.0, 145.0, 90.0);
   float coord_buff[3];
   for (int i = 0; i < num_legs; i++){
     legs[i].update_self(false);
@@ -40,7 +40,6 @@ legs({{int(servos[3*0]),int(servos[1+3*0]),int(servos[2+3*0]), 0, serial, A0, 0,
 void Body::update_self(){
     if(mode == GAIT && !joystick) gait_next();
     if(mode == BODY && !joystick) rotate_y(0.1);
-
     //read_IMU();
 
     //calculate_tilt();
@@ -108,21 +107,22 @@ void Body::shift(float dx, float dy){
 
 //Converts to other leg frames
 void Body::rotate_leg(float x1, float x2, int leg){
-    if(leg == )
+    if(leg == 0)
+      Serial.print(1);
 }
 
 void Body::gait_next(){
     float result[12];
     gait.next(result);
-    //Serial.println(result[0]);
-    //Serial.println(result[1]);
-    //Serial.println(result[2]);
+    //Serial.println(result[6]);
+    //Serial.println(result[7]);
+    //Serial.println(result[8]);
     set_position_leg(0, result[0], result[1], result[2], true);
-    delay(200);
+    //delay(200);
     set_position_leg(1, result[3], result[4], result[5], true);
-    delay(200);
+    //delay(200);
     set_position_leg(2, result[6], result[7], result[8], true);
-    delay(200);
+    //delay(200);
     set_position_leg(3, result[9], result[10], result[11], true);
 }
 

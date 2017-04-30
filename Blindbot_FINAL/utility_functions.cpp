@@ -103,8 +103,8 @@ bool constraints(float x, float y, float z)
     float temp_hf = (leg_length - COX_LEN)*(leg_length-COX_LEN) + y*y;
     if (temp_hf<0) return false;
     float HF=  sqrt((temp_hf*temp_hf + y*y)) ;
-    if abs((TIBIA_LEN*TIBIA_LEN- FEMUR_LEN*FEMUR_LEN- HF*HF)/(2*FEMUR_LEN*HF))>1 return false;    
-    if abs((TIBIA_LEN*TIBIA_LEN +FEMUR_LEN*FEMUR_LEN- HF*HF)/(2*FEMUR_LEN*HF))>1 return false;
+    if (abs((TIBIA_LEN*TIBIA_LEN- FEMUR_LEN*FEMUR_LEN- HF*HF)/(2*FEMUR_LEN*HF))>1) return false;    
+    if (abs((TIBIA_LEN*TIBIA_LEN +FEMUR_LEN*FEMUR_LEN- HF*HF)/(2*FEMUR_LEN*HF))>1) return false;
     return true;
 }
 
@@ -115,13 +115,13 @@ bool check_within_triangle(point p1, point p2, point p3, point p){
     // point p2(x2, y2);
     // point p3(x3, y3);
     // point p(x,y);
-    float alpha = ((*p2.y - *p3.y)*(*p.x - *p3.x) + (*p3.x - *p2.x)*(*p.y - *p3.y)) /
-            ((*p2.y - *p3.y)*(*p1.x - *p3.x) + (*p3.x - *p2.x)*(*p1.y - *p3.y));
-    float beta = ((*p3.y - *p1.y)*(*p.x - *p3.x) + (*p1.x - *p3.x)*(*p.y - *p3.y)) /
-           ((*p2.y - *p3.y)*(*p1.x - *p3.x) + (*p3.x - *p2.x)*(*p1.y - *p3.y));
+    float alpha = ((p2.y - p3.y)*(p.x - p3.x) + (p3.x - p2.x)*(p.y - p3.y)) /
+            ((p2.y - p3.y)*(p1.x - p3.x) + (p3.x - p2.x)*(p1.y - p3.y));
+    float beta = ((p3.y - p1.y)*(p.x - p3.x) + (p1.x - p3.x)*(p.y - p3.y)) /
+           ((p2.y - p3.y)*(p1.x - p3.x) + (p3.x - p2.x)*(p1.y - p3.y));
     float gamma = 1.0f - alpha - beta;
      
-     if (alpha<=0  || beta<=0 || gamma<=0): return false
+    if (alpha<=0  || beta<=0 || gamma<=0) return false;
     return true;
 }
 
@@ -133,5 +133,5 @@ bool check_within_quadrilateral(float x_coords[], float y_coords[])
   point p4 = {x_coords[3], y_coords[3]};
 
   return (check_within_triangle(p1,p2,p3,p1) && 
-        check_within_triangle(p2,p3,p4,p1))
+        check_within_triangle(p2,p3,p4,p1));
 }

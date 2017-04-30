@@ -9,12 +9,12 @@ struct GaitPos{
 
 class Gait{
 	int gait_step;
-	int leg, num_steps;
+	int leg;
 	int cycle;
 	float leg_height;
-	float x_forward, x_backward;
 	float walk_length;
-	bool first_gait;
+	bool first_gait[4] = {false, false, false, false};
+  float L;
 	GaitPos legs[4];
 	public:
 		void restart();

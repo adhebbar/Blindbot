@@ -1,43 +1,47 @@
 #include "Gait.h"
 #include "Arduino.h"
+#include "Robot.h"
 Gait::Gait(int num_gait_steps, float L, float leg_height, float walk_length){
-  //this->timing = timing;
 	cycle = num_gait_steps;
-	walk_length = walk_length;
-	leg_height = leg_height;
-	leg = 0;
+  this->L = L;
+	this->walk_length = walk_length;
+	this->leg_height = leg_height;
+	leg = 1;
   gait_step = 1;
-  first_gait = false;
   for (int leg_index = 0; leg_index < 4; leg_index++){
   	legs[leg_index].x = L;
   	legs[leg_index].y = leg_height;
-  	legs[leg_index].z = 0;
+  	if(leg_index == 0 || leg_index == 3) legs[leg_index].z = Z_ZERO;
+    else legs[leg_index].z = -Z_ZERO;
   }
 }
 
 int Gait::next(float coords[]){
   for (int leg_index = 0; leg_index < 4; leg_index++){
   	if (gait_step == 1 && leg_index == leg){
+  		legs[leg].x = L - 15.0;
   		legs[leg].y = leg_height*0.75;
   		gait_step++;
   	}
   	else if(gait_step == 2 && leg_index == leg){
   		legs[leg].y = leg_height*0.5;
-  		legs[leg].z = 0;
+  		if(leg == 0 || leg == 3) legs[leg].z = 10.0;
+      else legs[leg].z = -Z_ZERO;
   		gait_step++;
   	}
   	else if(gait_step == 3 && leg_index == leg){
   		legs[leg].y = leg_height*0.75;
-  		legs[leg].z = walk_length*0.5;
+  		legs[leg].z += walk_length*0.5;
   		gait_step++;
   	}
   	else if (gait_step == 4 && leg_index == leg){
   		legs[leg].y = leg_height;
   		gait_step++;
   	}
-  	else if(leg_index != leg && (first_gait||(leg_index < leg&& leg_index != 0)))
+  	else if(leg_index != leg && (first_gait[leg_index])){
       legs[leg_index].z -= walk_length/cycle;
-  	if (gait_step > cycle/4){
+  	}
+  	if (gait_step >= cycle/4){
   		cycle_leg();
   		gait_step = 1;
   	}
@@ -57,10 +61,11 @@ int Gait::next(float coords[]){
 }
 
 void Gait::cycle_leg(){
+  first_gait[leg] = true;
 	switch (leg){
 		case 0: leg = 2; break; 
 		case 1: leg = 0; break;
 		case 2: leg = 3; break;
-		case 3: leg = 1; first_gait = true; break;
+		case 3: leg = 1; break;
 	}
 }

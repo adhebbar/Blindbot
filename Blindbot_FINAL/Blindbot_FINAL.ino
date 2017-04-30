@@ -18,6 +18,8 @@ int servos[] = {0x01,0x02,0x03,
                         0x0A,0x0B,0x0C};
 int message_index = 0;
 char character = '\0';
+float walk_length = 100.0;
+float test_z = 50;
 SoftwareSerial mySerial(SOFT_RX,SOFT_TX); 
 //Leg leg1 = Leg(0x01,0x02,0x03, 1, Serial1, A0, 20,true, false, true);
 //Leg leg2 = Leg(0x04,0x05,0x06, 1, Serial1, A0, 20, true, true, false);
@@ -38,8 +40,12 @@ void loop() {
     //leg4.print_angles(true);
     //leg4.move_to_angles(512,768,256);
     //angle == 512 ? angle = 1024: angle = 512;
-    delay(500);
-    //body.update_self();
+    delay(300);
+    //test_z -= walk_length/20.0;
+    //body.set_position_leg(3, 60.0, 145.0, test_z, true);
+    //if(test_z <= -50)
+    //   delay(10000000);
+    body.update_self();
     /*
     if(mySerial.available()){
       char* message = new char [COMMAND_SIZE];
@@ -66,25 +72,25 @@ void loop() {
 }
 
 void test(){
-    body.set_position_leg(0, 75.0, 145.0, 0.0);
+    body.set_position_leg(0, 75.0, 145.0, 60.0,true);
     //delay(100);
-    body.set_position_leg(1, 75.0, 145.0, 0.0);
+    body.set_position_leg(1, 75.0, 145.0, -60.0,true);
     //delay(100);
-    body.set_position_leg(2, 75.0, 145.0, 0.0);
+    body.set_position_leg(2, 75.0, 145.0, -60.0,true);
     //delay(100);
-    body.set_position_leg(3, 75.0, 145.0, 0.0);
-    delay(2000);
-    body.set_position_leg(3, 75.0, 145.0/2.0, 0.0, true);
+    //body.set_position_leg(3, 75.0, 145.0*0.75, -60,true);
+    delay(200);
+    body.set_position_leg(3, 60.0, 145.0, 60.0, true);
     //delay(100);
     //body.set_position_leg(1, 80.0, 160.0, 0.0);
     //delay(100);
     //body.set_position_leg(2, 80.0, 160.0, 0.0);
     //delay(100);
     //body.set_position_leg(3, 80.0, 160.0, 0.0);
-    delay(3000);
-    body.set_position_leg(3, 75.0, 145.0/2.0, 74/2.0, true);
-    delay(2000);
-    body.set_position_leg(3, 75.0, 145.0, 74.0, true);
+    delay(200);
+    //body.set_position_leg(3, 61.0, 145.0/2.0, walk_length*0.5, true);
+    delay(200);
+    //body.set_position_leg(3, 50.0, 145.0, walk_length/2.0, true);
     //body.set_position_leg(0, COX_LEN+FEMUR_LEN, -TIBIA_LEN ,0.0);
     //body.set_position_leg(1, COX_LEN+FEMUR_LEN, -TIBIA_LEN ,0.0);
     //body.set_position_leg(2, COX_LEN+FEMUR_LEN, -TIBIA_LEN ,0.0);
