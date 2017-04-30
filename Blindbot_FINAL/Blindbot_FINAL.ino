@@ -31,14 +31,16 @@ void setup() {
     Serial2.begin(DEFAULT_BAUD);
     Serial3.begin(DEFAULT_BAUD);
     float answer[3];
-    test();
+    //test();
 }
 
 void loop() {
     //leg4.print_angles(true);
     //leg4.move_to_angles(512,768,256);
     //angle == 512 ? angle = 1024: angle = 512;
-    delay(1000);
+    delay(500);
+    //body.update_self();
+    /*
     if(mySerial.available()){
       char* message = new char [COMMAND_SIZE];
       while (character != '\n'){            
@@ -52,8 +54,6 @@ void loop() {
            }
       }
     }
-    
-
     while(Q.queue_size() != 0)
     {
       char* command = Q.deq();
@@ -61,27 +61,30 @@ void loop() {
       delete(command);
       
     }
-    //body.update_self();
+    */
     //leg1.update_angles();
 }
 
 void test(){
-    body.set_position_leg(0, 60.0, 176.0, 0.0);
+    body.set_position_leg(0, 75.0, 145.0, 0.0);
     //delay(100);
-    body.set_position_leg(1, 60.0, 176.0, 0.0);
+    body.set_position_leg(1, 75.0, 145.0, 0.0);
     //delay(100);
-    body.set_position_leg(2, 60.0, 176.0, 0.0);
+    body.set_position_leg(2, 75.0, 145.0, 0.0);
     //delay(100);
-    body.set_position_leg(3, 60.0, 176.0, 0.0);
+    body.set_position_leg(3, 75.0, 145.0, 0.0);
     delay(2000);
-    body.set_position_leg(0, 80.0, 160.0, 0.0);
+    body.set_position_leg(3, 75.0, 145.0/2.0, 0.0, true);
     //delay(100);
-    body.set_position_leg(1, 80.0, 160.0, 0.0);
+    //body.set_position_leg(1, 80.0, 160.0, 0.0);
     //delay(100);
-    body.set_position_leg(2, 80.0, 160.0, 0.0);
+    //body.set_position_leg(2, 80.0, 160.0, 0.0);
     //delay(100);
-    body.set_position_leg(3, 80.0, 160.0, 0.0);
+    //body.set_position_leg(3, 80.0, 160.0, 0.0);
     delay(3000);
+    body.set_position_leg(3, 75.0, 145.0/2.0, 74/2.0, true);
+    delay(2000);
+    body.set_position_leg(3, 75.0, 145.0, 74.0, true);
     //body.set_position_leg(0, COX_LEN+FEMUR_LEN, -TIBIA_LEN ,0.0);
     //body.set_position_leg(1, COX_LEN+FEMUR_LEN, -TIBIA_LEN ,0.0);
     //body.set_position_leg(2, COX_LEN+FEMUR_LEN, -TIBIA_LEN ,0.0);

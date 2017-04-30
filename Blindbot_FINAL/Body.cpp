@@ -15,7 +15,7 @@ legs({{int(servos[3*0]),int(servos[1+3*0]),int(servos[2+3*0]), 0, serial, A0, 0,
       {int(servos[3*2]),int(servos[1+3*2]),int(servos[2+3*2]), 2, serial2, A0, 0,false,true,true}, 
       {int(servos[3*3]),int(servos[1+3*3]),int(servos[2+3*3]), 3, serial3, A0, 0, false, false, false}})
 {
-    mode = LOCK;
+  mode = GAIT;
 	/*for (int i = 0; i < 4; i ++){
 		switch(i){
 			case 0: legs[i] = Leg();
@@ -24,20 +24,23 @@ legs({{int(servos[3*0]),int(servos[1+3*0]),int(servos[2+3*0]), 0, serial, A0, 0,
 			case 3: legs[i] = Leg(int(servos[3*i]),int(servos[1+3*i]),int(servos[2+3*i]), int(i), serial3, A0, 0);
 		}
 	}*/
-	update_self();
+  gait = Gait(20, 75.0, 145.0, 74.0);
+  /*float coord_buff[3];
+  for (int i = 0; i < num_legs; i++){
+    legs[i].update_self(false);
+    legs[i].get_position(coord_buff);
+    x_coords[i] = coord_buff[0];
+    y_coords[i] = coord_buff[1];
+    z_coords[i] = coord_buff[2];
+  }
+  */
+  //update_self();
 }
 
 void Body::update_self(){
-    float coord_buff[3];
-    if (mode == GAIT) gait_next();
+    if(mode == GAIT) gait_next();
     //read_IMU();
-    for (int i = 0; i < num_legs; i++){
-        legs[i].update_self(false);
-        legs[i].get_position(coord_buff);
-        x_coords[i] = coord_buff[0];
-        y_coords[i] = coord_buff[1];
-        z_coords[i] = coord_buff[2];
-    }
+
     //calculate_tilt();
 }
 
@@ -106,9 +109,18 @@ void Body::rotate_leg(float x1, float x2, int leg){
 }
 
 void Body::gait_next(){
-    float result[3];
-    int leg = this->gait.next(result);
-    set_position_leg(leg, result[0], result[1], result[2]);
+    float result[12];
+    gait.next(result);
+    //Serial.println(result[0]);
+    //Serial.println(result[1]);
+    //Serial.println(result[2]);
+    set_position_leg(0, result[0], result[1], result[2], true);
+    delay(200);
+    set_position_leg(1, result[3], result[4], result[5], true);
+    delay(200);
+    set_position_leg(2, result[6], result[7], result[8], true);
+    delay(200);
+    set_position_leg(3, result[9], result[10], result[11], true);
 }
 
 /* COMMUNICATION */
@@ -145,12 +157,12 @@ void Body::send_pose(){
 /* THIS SHOULD UPDATE THE PARAMETERS THAT THE BODY NEEDS TO KNOW
    FROM THE LEGS AND ALSO MAKE THE LEGS UPDATE THEMSELVES */
 
-void Body::set_position_leg(int leg, float x, float y, float z){
+void Body::set_position_leg(int leg, float x, float y, float z, bool no_x = false){
     float answer[3];
-    //if (x == -1000) x = x_coords[leg];
-    //if (y == -1000) y = y_coords[leg];
-    //if (z == -1000) z = z_coords[leg];
-    legs[leg].IK(x,y,z, answer, false, true);
+    x_coords[leg] = x;
+    y_coords[leg] = y;
+    z_coords[leg] = z;
+    legs[leg].IK(x,y,z, answer, false, true, no_x);
 }
 
 void Body::set_angle_leg(int leg, int cox, int femur, int tibia){

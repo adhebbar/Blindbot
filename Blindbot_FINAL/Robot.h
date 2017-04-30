@@ -12,8 +12,8 @@
 #define WEST 'w'
 //measurements
 #define COX_LEN 60.0 //mm
-#define FEMUR_LEN 83.0 //mm
-#define TIBIA_LEN 93.0 //mm
+#define FEMUR_LEN 85.0 //mm
+#define TIBIA_LEN 70.0 //mm
 #define MAX_COX 256
 //body constants
 #define XOFF 9.43

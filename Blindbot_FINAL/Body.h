@@ -9,9 +9,9 @@ class Body{
     const int centroid_threshold;
     int num_legs;
     Leg legs[4];
-    float x_coords[];
-    float y_coords[];
-    float z_coords[];
+    float x_coords[4];
+    float y_coords[4];
+    float z_coords[4];
     int x_offset, y_offset; //distance from center of body to legs
     int speed_setting;
     int height; //distance from the ground
@@ -25,7 +25,7 @@ class Body{
     public:
         Body(int servos[], HardwareSerial& serial, HardwareSerial& serial1, 
              HardwareSerial& serial2, HardwareSerial& serial3);
-        void set_position_leg(int leg, float x, float y, float z);
+        void set_position_leg(int leg, float x, float y, float z, bool no_x = false);
         void set_angle_leg(int leg, int cox_angle, int femur_angle, int tibia_angle);
         int read_force_leg(int leg);
         void set_gait(Gait gait);

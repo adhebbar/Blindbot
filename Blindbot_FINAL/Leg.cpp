@@ -61,9 +61,9 @@ void Leg::update_soft(){
 }
 
 void Leg::update_self(bool debug_prints){
-  update_force();
-  update_soft();
-  update_angles();
+  //update_force();
+  //update_soft();
+  //update_angles();
   FK(debug_prints);
 }
 
@@ -86,13 +86,21 @@ void Leg::get_position(float result[]){
 /*
 
 */
-void Leg::IK (float x, float y, float z, float answer[], 
-			  bool debug_prints, bool update)
+void Leg::IK (float L_x, float y, float z, float answer[], 
+			  bool debug_prints, bool update, bool no_x)
 {
+   float x, L;
+   if(no_x){
+      x = sqrt(L_x*L_x - z*z);
+      L = L_x;
+   }
+   else{
+    x = L_x;
+    L = sqrt(x*x + z*z); 
+   }
    float cox_angle = atan2(z,x);
-   if (cox_angle > MAX_COX)
-    return;
-   float L = sqrt(x*x+z*z);
+   //if (cox_angle > MAX_COX)
+   // return;
    float HF = sqrt(y*y + (L - COX_LEN)*(L-COX_LEN));
    float alpha1 = atan2((L-COX_LEN),y);
    float alpha2 = acos((HF*HF + FEMUR_LEN*FEMUR_LEN - TIBIA_LEN*TIBIA_LEN)/(2*HF*FEMUR_LEN));

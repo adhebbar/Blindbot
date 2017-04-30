@@ -20,7 +20,7 @@ class Leg{
 		void get_position(float result[]);
 		void move_to_position(float x, float y, float z);
 		void IK(float x, float y, float z, float answer[], 
-			    bool debug_prints, bool update);
+			    bool debug_prints, bool update, bool no_x);
 		void FK(bool debug_prints);
     void FK (float answer[], bool debug_prints);
 		void normal_foot(int pos, int playtime);
