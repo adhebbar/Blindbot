@@ -114,9 +114,11 @@ void Body::rotate_leg(float x1, float x2, int leg){
 void Body::gait_next(){
     float result[12];
     gait.next(result);
-    //Serial.println(result[6]);
-    //Serial.println(result[7]);
-    //Serial.println(result[8]);
+    //Serial.println(result[0]);
+    //Serial.println(result[1]);
+    //Serial.println(result[2]);
+    if(gait.gait_count > 1 && !gait.is_reversed())
+      gait.reverse();
     set_position_leg(0, result[0], result[1], result[2], true);
     //delay(200);
     set_position_leg(1, result[3], result[4], result[5], true);

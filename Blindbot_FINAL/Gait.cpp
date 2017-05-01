@@ -8,12 +8,9 @@ Gait::Gait(int num_gait_steps, float L, float leg_height, float walk_length){
 	this->leg_height = leg_height;
 	leg = 1;
   gait_step = 1;
-  for (int leg_index = 0; leg_index < 4; leg_index++){
-  	legs[leg_index].x = L;
-  	legs[leg_index].y = leg_height;
-  	if(leg_index == 0 || leg_index == 3) legs[leg_index].z = Z_ZERO;
-    else legs[leg_index].z = -Z_ZERO;
-  }
+  reversed = 1;
+  gait_count = 0;
+  restart();
 }
 
 int Gait::next(float coords[]){
@@ -25,13 +22,13 @@ int Gait::next(float coords[]){
   	}
   	else if(gait_step == 2 && leg_index == leg){
   		legs[leg].y = leg_height*0.5;
-  		if(leg == 0 || leg == 3) legs[leg].z = 10.0;
-      else legs[leg].z = -Z_ZERO;
+  		if(leg % 3 == 0) legs[leg].z = is_reversed() ? 10+walk_length/2.0 : 10;
+      else legs[leg].z = !is_reversed() ? -Z_ZERO : 0;
   		gait_step++;
   	}
   	else if(gait_step == 3 && leg_index == leg){
   		legs[leg].y = leg_height*0.75;
-  		legs[leg].z += walk_length*0.5;
+  		legs[leg].z = legs[leg].z + walk_length*0.5*reversed;
   		gait_step++;
   	}
   	else if (gait_step == 4 && leg_index == leg){
@@ -39,11 +36,12 @@ int Gait::next(float coords[]){
   		gait_step++;
   	}
   	else if(leg_index != leg && (first_gait[leg_index])){
-      legs[leg_index].z -= walk_length/cycle;
+      legs[leg_index].z = legs[leg_index].z - walk_length/cycle*reversed;
   	}
   	if (gait_step >= cycle/4){
   		cycle_leg();
   		gait_step = 1;
+
   	}
   }
   coords[0] = legs[0].x;
@@ -62,10 +60,42 @@ int Gait::next(float coords[]){
 
 void Gait::cycle_leg(){
   first_gait[leg] = true;
-	switch (leg){
-		case 0: leg = 2; break; 
-		case 1: leg = 0; break;
-		case 2: leg = 3; break;
-		case 3: leg = 1; break;
+	if(reversed == 1){
+  	switch (leg){
+  		case 0: leg = 2; break; 
+  		case 1: leg = 0; break;
+  		case 2: leg = 3; break;
+  		case 3: leg = 1; gait_count++; break;
+  	}
 	}
+  else{
+      switch(leg){
+      case 0: leg = 1; break;
+      case 1: leg = 3; gait_count ++; break;
+      case 2: leg = 0; break;
+      case 3: leg = 2; break;
+    }
+  }
 }
+
+void Gait::reverse(){
+  restart();
+  reversed *= -1;
+}
+
+void Gait::restart(){
+  if(is_reversed()) leg = 3;
+  else leg = 1;
+  for (int leg_index = 0; leg_index < 4; leg_index++){
+    first_gait[leg_index] = false;
+    legs[leg_index].x = L;
+    legs[leg_index].y = leg_height;
+    if(leg_index == 0 || leg_index == 3) legs[leg_index].z = Z_ZERO;
+    else legs[leg_index].z = -Z_ZERO;
+  }
+}
+
+bool Gait::is_reversed(){
+  return reversed == -1;
+}
+

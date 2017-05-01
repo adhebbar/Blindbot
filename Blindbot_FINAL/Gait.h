@@ -8,6 +8,7 @@ struct GaitPos{
 };
 
 class Gait{
+  int reversed;
 	int gait_step;
 	int leg;
 	int cycle;
@@ -17,10 +18,12 @@ class Gait{
   float L;
 	GaitPos legs[4];
 	public:
+    int gait_count;
 		void restart();
 		void reverse();
     int next(float coords[]);
     void cycle_leg();
+    bool is_reversed();
     Gait(){}
 		Gait(int num_steps, float L, float leg_height, float walk_length);
 };
