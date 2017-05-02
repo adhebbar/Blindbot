@@ -15,6 +15,7 @@ legs({{int(servos[3*0]),int(servos[1+3*0]),int(servos[2+3*0]), 0, serial, A0, 0,
       {int(servos[3*2]),int(servos[1+3*2]),int(servos[2+3*2]), 2, serial2, A0, 0,false,true,true}, 
       {int(servos[3*3]),int(servos[1+3*3]),int(servos[2+3*3]), 3, serial3, A0, 0, false, false, false}})
 {
+	num_legs = 4;
   mode = GAIT;
 	/*for (int i = 0; i < 4; i ++){
 		switch(i){
@@ -73,17 +74,35 @@ void Body::balance(){
 /* MOVEMENT */
 
 //Rotate in place around y axis
-void Body::rotate_y(int d_theta){
-    Leg reference = legs[1];
-    float x0 = reference.current_x + XOFF;
-    float z0 = reference.current_z + YOFF;
-    float R = sqrt(x0*x0 + z0*z0);
-    float alpha = tan(z0/x0);
-    float x1 = sqrt((R*R)/(1+tan(alpha+d_theta)*tan(alpha+d_theta)));
-    float z1 = sqrt(R*R - x1*x1);
-    return x1 - XOFF, z1-YOFF; //New coords for leg
+void Body::IK_pos(float &x2, float &z2, float &dist, float &angle, int leg){
+	float x1 = x2; float z1 = z2;
+	x2 = x1 + X_OFF;
+	z2 = z1 + Y_OFF;
+	dist = sqrt(x2*x2 + y2* y2);
+	x2 = leg <= (num_legs-1)/2 ? x2 : -x2;
+	z2 = leg % 
+	angle = atan2(y2,x2);
 }
 
+
+void Body::rotate_y(int d_theta){
+	float old_x, old_z, dist, angle;
+	float new_x, new_z, IK_x, IK_y;
+	for(int leg = 0; leg < num_legs; leg++){
+		old_x = x_coords[leg];
+		old_z = z_coords[leg];
+		IK_pos(old_x, old_z, dist, angle, leg);
+	  new_x = dist*cos(d_theta+angle);
+		new_y = dist*sin(d_teta+angle);
+		IK_x = new_x - old_x;
+		IK_z = new_z - old_z;
+		set_position_leg(leg, x_coords[leg]+IK_x, y_coords[leg], z_coords[leg]+ IK_z);
+	}
+}
+
+void Body::rotate_xz(float x_rotation, float z_rotation){
+	float roll = tan();
+}
 
 
 //Shifts center of the body by specified offset
@@ -152,7 +171,6 @@ void Body::send_pose(){
     Serial.print(leg_pose[1]);
     Serial.println(leg_pose[2]);
     legs[3].get_position(leg_pose);
-    print_val("Leg 4: ", leg_pose[0]);
     Serial.print(leg_pose[1]);
     Serial.println(leg_pose[2]);
 }
@@ -161,10 +179,11 @@ void Body::send_pose(){
 
 /* THIS SHOULD UPDATE THE PARAMETERS THAT THE BODY NEEDS TO KNOW
    FROM THE LEGS AND ALSO MAKE THE LEGS UPDATE THEMSELVES */
+    print_val("Leg 4: ", leg_pose[0]);
 
 void Body::set_position_leg(int leg, float x, float y, float z, bool no_x = false){
     float answer[3];
-    x_coords[leg] = x;
+    x_coords[leg] = no_x ? sqrt(x*x - z*z) : x;
     y_coords[leg] = y;
     z_coords[leg] = z;
     legs[leg].IK(x,y,z, answer, false, true, no_x);
