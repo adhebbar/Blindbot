@@ -62,7 +62,25 @@ void centroid_triangle(float* cx, float* cy, float x_coords[], float y_coords[],
     *cy = y_sum/3;
 }
 
-void get_coords(char* command, float& dx, float& dy, int& dz){
+void get_command(char command[]){
+  char instruction = command[0];
+  char buffer[10];
+  switch (instruction){
+    case 'S': {
+      for (int i = 0; command[i] != '\n'; i++)
+        buffer[1+i] = command[i];
+      
+      break;
+    }
+    case 'M': break;
+    case 'R': break;
+    case 'T': break;
+    case 'B': break;
+  }
+
+}
+
+void get_coords(char command[], float& dx, float& dy, int& dz){
     char* buffer = new char[PRECISION]();
     int i = 0;
     int count = 1;

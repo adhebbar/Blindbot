@@ -74,14 +74,18 @@ void Body::balance(){
 
 //Rotate in place around y axis
 void Body::rotate_y(int d_theta){
-    Leg reference = legs[1];
-    float x0 = reference.current_x + XOFF;
-    float z0 = reference.current_z + YOFF;
+    float x_answer[4];
+    float z_answer[4];
+    float x0 = x_coords[0];
+    float z0 = x_coords[0];
     float R = sqrt(x0*x0 + z0*z0);
     float alpha = tan(z0/x0);
-    float x1 = sqrt((R*R)/(1+tan(alpha+d_theta)*tan(alpha+d_theta)));
-    float z1 = sqrt(R*R - x1*x1);
-    return x1 - XOFF, z1-YOFF; //New coords for leg
+    float x_answer[0] = sqrt((R*R)/(1+tan(alpha+d_theta)*tan(alpha+d_theta)));
+    float z_answer[0] = sqrt(R*R - x_answer[0]*x_answer[0]);
+    for (int leg = 1; leg < 4; leg ++)
+        rotate_leg(x_answer[0], z_answer[0], x_answer[leg], z_answer[leg], leg);
+    for (int leg = 0; leg < 4; leg++)
+      set_position_leg(leg, x_answer[leg], y_coords[leg], z_answer[leg]);
 }
 
 
@@ -106,9 +110,8 @@ void Body::shift(float dx, float dy){
 }
 
 //Converts to other leg frames
-void Body::rotate_leg(float x1, float x2, int leg){
-    if(leg == 0)
-      Serial.print(1);
+void Body::rotate_leg(float x1, float z1, float& x2, float& z2 int leg){
+  if 9 
 }
 
 void Body::gait_next(){

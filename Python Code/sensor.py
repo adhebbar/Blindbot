@@ -3,7 +3,7 @@ import serial
 import pygame
 from multiprocessing import Event, Process
 
-class SerialPort():
+class SerialPort(Process):
 	def __init__(self, baud, port, packet_ending):
 		self.start_time = 0.0
 		self.packet_ending = packet_ending
@@ -59,37 +59,42 @@ class Robot(SerialPort):
             while (len(self.data_q) > 0):
                 current_data = data_q.pop(0)
                 #TODO Take decisions based on actions
-            if self.joystick.button_updated("A"):
-                self.send_message("SetA")
+            if self.joystick.button_updated("A") and not self.joystick.get_button("A"):
+                self.send_message("SA")
                 self.state = self.GAIT
-            elif self.joystick.button_updated("B"):
-                self.send_message("SetB")
+            elif self.joystick.button_updated("B") and not self.joystick.get_button("B"):
+                self.send_message("SB")
                 self.state = self.GAIT_AUTO
-            elif self.joystick.button_udpated("X"):
-                self.send_message("SetX")
+            elif self.joystick.button_updated("X") and not self.joystick.get_button("X"):
+                self.send_message("SX")
                 self.state = self.BODY
-            elif self.joysick.button_udpated("Y"):
-                self.send_message("SetY")
+            elif self.joystick.button_updated("Y") and not self.joystick.get_button("Y"):
+                self.send_message("SY")
                 self.state = self.LEGS
-            else:
-                self.send_message("SetLB")
+            elif self.joystick.button_updated("LB") and not self.joystick.get_button("LB"):
+                self.send_message("SLB")
                 self.state = self.LOCK
+            elif self.joystick.button_update("RB") and not self.joystick.get_button("RB"):
+                self.send_message("SRB")
+            elif self.joystick.dpad_updated():
+                self.send_message(str(self.dpad))
             elif self.joystick.axis_updated("RA_X") or
                 self.joystick.axis_updated("RA_Y"):
-                coords_available = True
+                axis_x, axis_y = joystick.get_axes("RA")
+                axis_angle = joystick.get_axis_angle("RA")
                 if self.state == self.GAIT:
-                    self.send_message("MOVE")
+                    self.send_message("R A {0f}".format(angle))
                 elif self.state == self.LEGS:
-                    pass
+                    self.send_message("M Z {0f}".format(axis_x))
                 elif self.state == self.BODY:
-                    pass
-                else
-            return
-
-
+                    self.send_message("R A {0f}".format(angle))
             if self.joystick.axis_updated("LA_X") or
                self.joystick.axis_updated("LA_Y"):
-               pass #move forward backward to the left or right
-            
-
-
+                axis_x, axis_y = joystick.get_axes("LA");
+                axis_angle = joystick.get_axis_angle("LA");
+                if self.state = self.GAIT:
+                    self.send_message("MD{},{:0f}".format(axis_x,axis_y))
+                elif self.state == self.LEGS:
+                    self.send_message("MX{0f}".format(axis_x))
+                elif self.state == self.BODY:
+                    self.send_message("TA{0f}".format(angle))

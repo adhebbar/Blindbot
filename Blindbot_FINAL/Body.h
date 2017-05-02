@@ -46,7 +46,7 @@ class Body{
         void read_IMU();
         void rotate_y(int d_theta);
         void shift(float dx, float dy);
-        void rotate_leg(float x1, float x2, int leg);
+        void rotate_leg(float x1, float z1, float& x2, float& z2, int leg);
         void set_mode(int i);
         int get_mode();
 

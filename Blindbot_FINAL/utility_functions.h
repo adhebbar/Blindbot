@@ -19,7 +19,8 @@ void centroid_polygon(float* cx, float* cy,float x_coords[], float y_coords[], i
 void centroid_triangle(float* cx, float* cy, float x_coords[], float y_coords[], int legs);
 float convert_to_kg(float forces[],int num_legs);
 float convert_force(int force);
-void get_coords(char* command, float& dx, float& dy, float& dz);
+void get_command(char command[])
+void get_coords(char command[], float& dx, float& dy, float& dz);
 bool constraints(float x, float y, float z);
 bool check_within_triangle(point p1, point p2, point p3, point p);
 bool check_within_quadrilateral(float x_coords[], float y_coords[]);
