@@ -9,22 +9,22 @@
 /* IMPLEMENTATION */
 
 Body::Body(int* servos, HardwareSerial& serial, HardwareSerial& serial1, 
-		   HardwareSerial& serial2, HardwareSerial& serial3, bool joystick_connected = false):
+       HardwareSerial& serial2, HardwareSerial& serial3, bool joystick_connected = false):
 legs({{int(servos[3*0]),int(servos[1+3*0]),int(servos[2+3*0]), 0, serial, A0, 0,true,true,true},
       {int(servos[3*1]),int(servos[1+3*1]),int(servos[2+3*1]), 1, serial1, A0, 0,true,false,false},
       {int(servos[3*2]),int(servos[1+3*2]),int(servos[2+3*2]), 2, serial2, A0, 0,false,true,true}, 
       {int(servos[3*3]),int(servos[1+3*3]),int(servos[2+3*3]), 3, serial3, A0, 0, false, false, false}})
 {
-	num_legs = 4;
+  num_legs = 4;
   mode = GAIT;
-	/*for (int i = 0; i < 4; i ++){
-		switch(i){
-			case 0: legs[i] = Leg();
-			case 1: legs[i] = Leg(int(servos[3*i]),int(servos[1+3*i]),int(servos[2+3*i]), int(i), serial1, A0, 0);
-			case 2: legs[i] = Leg(int(servos[3*i]),int(servos[1+3*i]),int(servos[2+3*i]), int(i), serial2, A0, 0);
-			case 3: legs[i] = Leg(int(servos[3*i]),int(servos[1+3*i]),int(servos[2+3*i]), int(i), serial3, A0, 0);
-		}
-	}*/
+  /*for (int i = 0; i < 4; i ++){
+    switch(i){
+      case 0: legs[i] = Leg();
+      case 1: legs[i] = Leg(int(servos[3*i]),int(servos[1+3*i]),int(servos[2+3*i]), int(i), serial1, A0, 0);
+      case 2: legs[i] = Leg(int(servos[3*i]),int(servos[1+3*i]),int(servos[2+3*i]), int(i), serial2, A0, 0);
+      case 3: legs[i] = Leg(int(servos[3*i]),int(servos[1+3*i]),int(servos[2+3*i]), int(i), serial3, A0, 0);
+    }
+  }*/
   gait = Gait(20, 75.0, 145.0, 90.0);
   float coord_buff[3];
   for (int i = 0; i < num_legs; i++){
@@ -39,11 +39,12 @@ legs({{int(servos[3*0]),int(servos[1+3*0]),int(servos[2+3*0]), 0, serial, A0, 0,
 }
 
 void Body::update_self(){
-    if(mode == GAIT && !joystick) gait_next();
-    if(mode == BODY && !joystick) rotate_y(0.1);
-    //read_IMU();
-
-    //calculate_tilt();
+  if(mode == GAIT && !joystick) gait_next();
+  if(mode == BODY && !joystick) rotate_y(0.01);
+  /*
+  update_COM();
+  update_acceleration();
+  */
 }
 
 /* KINEMATICS RELATED */
@@ -75,33 +76,33 @@ void Body::balance(){
 
 //Rotate in place around y axis
 void Body::IK_pos(float &x2, float &z2, float &dist, float &angle, int leg){
-	float x1 = x2; float z1 = z2;
-	x2 = x1 + X_OFF;
-	z2 = z1 + Y_OFF;
-	dist = sqrt(x2*x2 + y2* y2);
-	x2 = leg <= (num_legs-1)/2 ? x2 : -x2;
-	z2 = leg % 
-	angle = atan2(y2,x2);
+  float x1 = x2; float z1 = z2;
+  x2 = x1 + X_OFF;
+  z2 = z1 + Y_OFF;
+  dist = sqrt(x2*x2 + y2* y2);
+  x2 = leg <= (num_legs-1)/2 ? x2 : -x2;
+  z2 = leg % 
+  angle = atan2(y2,x2);
 }
 
 
 void Body::rotate_y(int d_theta){
-	float old_x, old_z, dist, angle;
-	float new_x, new_z, IK_x, IK_y;
-	for(int leg = 0; leg < num_legs; leg++){
-		old_x = x_coords[leg];
-		old_z = z_coords[leg];
-		IK_pos(old_x, old_z, dist, angle, leg);
-	  new_x = dist*cos(d_theta+angle);
-		new_y = dist*sin(d_teta+angle);
-		IK_x = new_x - old_x;
-		IK_z = new_z - old_z;
-		set_position_leg(leg, x_coords[leg]+IK_x, y_coords[leg], z_coords[leg]+ IK_z);
-	}
+  float old_x, old_z, dist, angle;
+  float new_x, new_z, IK_x, IK_y;
+  for(int leg = 0; leg < num_legs; leg++){
+    old_x = x_coords[leg];
+    old_z = z_coords[leg];
+    IK_pos(old_x, old_z, dist, angle, leg);
+    new_x = dist*cos(d_theta+angle);
+    new_y = dist*sin(d_teta+angle);
+    IK_x = new_x - old_x;
+    IK_z = new_z - old_z;
+    set_position_leg(leg, x_coords[leg]+IK_x, y_coords[leg], z_coords[leg]+ IK_z);
+  }
 }
 
 void Body::rotate_xz(float x_rotation, float z_rotation){
-	float roll = tan();
+  float roll = tan();
 }
 
 
@@ -122,12 +123,6 @@ void Body::shift(float dx, float dy){
         set_position_leg(2, left_x1, y_coords[2], back_z1);
         set_position_leg(3, left_x1, y_coords[3], front_z1);
     }
-}
-
-//Converts to other leg frames
-void Body::rotate_leg(float x1, float x2, int leg){
-    if(leg == 0)
-      Serial.print(1);
 }
 
 void Body::gait_next(){
