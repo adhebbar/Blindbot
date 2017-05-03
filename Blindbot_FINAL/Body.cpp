@@ -85,7 +85,6 @@ void Body::IK_pos(float &x2, float &z2, float &dist, float &angle, int leg){
   angle = atan2(y2,x2);
 }
 
-
 void Body::rotate_y(int d_theta){
   float old_x, old_z, dist, angle;
   float new_x, new_z, IK_x, IK_y;
@@ -98,10 +97,20 @@ void Body::rotate_y(int d_theta){
     IK_x = new_x - old_x;
     IK_z = new_z - old_z;
     set_position_leg(leg, x_coords[leg]+IK_x, y_coords[leg], z_coords[leg]+ IK_z);
+  }
 }
 
 void Body::rotate_xz(float x_rotation, float z_rotation){
-  float roll = tan();
+  float roll = tan(z_rotation);
+  float pitch = tan(x_rotation);
+  int roll_sign, pitch_sign;
+  for (int leg = 0; leg < num_legs; leg++){
+    roll_sign = leg < num_legs/2 ? 1 : -1;
+    pitch_sign = leg % 3 == 0 ? 1 : -1;
+    float IK_y = roll*roll_sign + pitch*pitch_sign;
+    //TODO implement rotation matrix for smoother movement.
+    set_position_leg(leg, x_coords[leg], y_coords[leg] + IK_y, z_coords[leg]);
+  }
 }
 
 
@@ -124,14 +133,6 @@ void Body::shift(float dx, float dy){
     }
 }
 
-<<<<<<< HEAD
-=======
-//Converts to other leg frames
-void Body::rotate_leg(float x1, float z1, float& x2, float& z2 int leg){
-  if 9 
-}
-
->>>>>>> 0964f500fbb6437b77848e643fd164730a79a57a
 void Body::gait_next(){
     float result[12];
     gait.next(result);
