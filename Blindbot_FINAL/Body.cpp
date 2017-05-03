@@ -87,6 +87,7 @@ void Body::IK_pos(float &x2, float &z2, float &dist, float &angle, int leg){
 
 
 void Body::rotate_y(int d_theta){
+<<<<<<< HEAD
   float old_x, old_z, dist, angle;
   float new_x, new_z, IK_x, IK_y;
   for(int leg = 0; leg < num_legs; leg++){
@@ -99,6 +100,20 @@ void Body::rotate_y(int d_theta){
     IK_z = new_z - old_z;
     set_position_leg(leg, x_coords[leg]+IK_x, y_coords[leg], z_coords[leg]+ IK_z);
   }
+=======
+    float x_answer[4];
+    float z_answer[4];
+    float x0 = x_coords[0];
+    float z0 = x_coords[0];
+    float R = sqrt(x0*x0 + z0*z0);
+    float alpha = tan(z0/x0);
+    float x_answer[0] = sqrt((R*R)/(1+tan(alpha+d_theta)*tan(alpha+d_theta)));
+    float z_answer[0] = sqrt(R*R - x_answer[0]*x_answer[0]);
+    for (int leg = 1; leg < 4; leg ++)
+        rotate_leg(x_answer[0], z_answer[0], x_answer[leg], z_answer[leg], leg);
+    for (int leg = 0; leg < 4; leg++)
+      set_position_leg(leg, x_answer[leg], y_coords[leg], z_answer[leg]);
+>>>>>>> 0964f500fbb6437b77848e643fd164730a79a57a
 }
 
 void Body::rotate_xz(float x_rotation, float z_rotation){
@@ -125,6 +140,14 @@ void Body::shift(float dx, float dy){
     }
 }
 
+<<<<<<< HEAD
+=======
+//Converts to other leg frames
+void Body::rotate_leg(float x1, float z1, float& x2, float& z2 int leg){
+  if 9 
+}
+
+>>>>>>> 0964f500fbb6437b77848e643fd164730a79a57a
 void Body::gait_next(){
     float result[12];
     gait.next(result);

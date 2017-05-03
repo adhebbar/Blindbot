@@ -35,7 +35,7 @@ int signed_area(float x[], float y[], int n){
 }
 
 
-void centroid_polygon(float* cx, float* cy, float x_coords[], float y_coords[], int legs){
+void centroid_polygon(float &cx, float &cy, float x_coords[], float y_coords[], int legs){
     float area = signed_area(x_coords, y_coords, legs);
     float centroid_x = 0;
     float centroid_y = 0;
@@ -51,18 +51,36 @@ void centroid_polygon(float* cx, float* cy, float x_coords[], float y_coords[], 
     *cy = centroid_y/(6*area);
 }
 
-void centroid_triangle(float* cx, float* cy, float x_coords[], float y_coords[], int legs){
+void centroid_triangle(float& cx, float& cy, float x_coords[], float y_coords[], int legs){
     float x_sum = 0;
     float y_sum = 0;
     for (int i = 0; i < legs; i++){
         x_sum += x_coords[i];
         y_sum += y_coords[i];
     }
-    *cx = x_sum/3;
-    *cy = y_sum/3;
+    cx = x_sum/3;
+    cy = y_sum/3;
 }
 
-void get_coords(char* command, float& dx, float& dy, int& dz){
+void get_command(char command[]){
+  char instruction = command[0];
+  char buffer[10];
+  switch (instruction){
+    case 'S': {
+      for (int i = 0; command[i] != '\n'; i++)
+        buffer[1+i] = command[i];
+      
+      break;
+    }
+    case 'M': break;
+    case 'R': break;
+    case 'T': break;
+    case 'B': break;
+  }
+
+}
+
+void get_coords(char command[], float& dx, float& dy, int& dz){
     char* buffer = new char[PRECISION]();
     int i = 0;
     int count = 1;

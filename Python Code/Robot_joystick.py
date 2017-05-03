@@ -17,7 +17,7 @@ class RoboJoystick():
         self.dead_zone = axes_dead_zone
         self.dpad = (0,0)
         self.prev_dpad = (0,0)
-        self.buttons, self.axes_map = create_button_map(os_num)
+        self.buttons, self.axes_map = self.create_button_map(os_num)
         self.key_map = {
             K_UP : 'up',
             K_DOWN : 'down',
@@ -39,9 +39,13 @@ class RoboJoystick():
         for axis in self.axes:
             self.axes[self.axes_map[axis]] = 0.0
             self.axes_chaged[self.axes_map[axis]] = False
-        self.prev_keys = copy(keys_pressed)
+        self.prev_keys = copy(self.keys_pressed)
 
         self.running = False
+
+    def get_button(self, button):
+        return self.keys_pressed[button]
+
 
     def button_updated(self, button):
         prev_state = self.prev_keys[button]
@@ -58,24 +62,27 @@ class RoboJoystick():
         return False
 
     def axis_updated(self, name):
-        if self.axes_changed[name]:
+        if self.axes_changed.get(name):
             self.axes_changed[name] = False
             return True
         return False
 
     def get_events(self):
         for event in pygame.event.get():
-            if event.type == QUIT or (event.key == K_ESCAPE):
+            if event.type == QUIT:
                 self.running = False
                 return None
-
             elif event.type == KEYDOWN or event.type == KEYUP:
                 key_pushed_down = event.type == KEYDOWN
                 button = self.key_map.get(event.key) #uses get to prevent unsafe accesses
                 if button is not None:
                     self.keys_pressed[button] = key_pushed_down
+                if event.key == K_P:
+                    self.running = False
+                    return None
 
             if event.type == JOYBUTTONDOWN:
+                print(event.button)
                 button = self.buttons.get(event.button)
                 if button is None: 
                     print ("Unregistered button pressed!")
@@ -87,25 +94,33 @@ class RoboJoystick():
                 if button is None: 
                     print ("Unregistered button pressed!")
                     return
+                if button == "BACK":
+                    self.running = False
+                    return None
                 self.keys_pressed[button] = False
-                
+
+
             if event.type == pygame.JOYHATMOTION:
                 self.dpad = event.value
 
+
+
             if event.type == pygame.JOYAXISMOTION:
-                if abs(event.value > self.dead_zone):
+                if abs(event.value) > self.dead_zone:
                     value = event.value
                 else:
                     value = 0.0
-
-                if self.axes[self.axes_map[event.axis]] != value:
-                    self.axes[self.axes_map[event.axis]] = value
+                print(value)
+                prev_value = self.axes.get(self.axes_map.get(event.axis))
+                if prev_value != value and self.axes_map.get(event.axis) is not None:
+                    self.axes[self.axes_map.get(event.axis)]= value
                     self.axes_changed[self.axes_map[event.axis]] = True
 
     def init_joystick(self):
-        pygame.joystick.init()
-        self.joystick = pygame.joystick.Joystick(0)
-        self.joystick_name = self.joystick.get_name()
+        joysticks = [pygame.joystick.Joystick(x) for x in
+                     range(pygame.joystick.get_count())]
+        for joystick in joysticks:
+            joystick.init()
 
     @staticmethod
     def create_button_map(os_num):
@@ -144,3 +159,34 @@ class RoboJoystick():
                 4: "RA_X",
                 3: "RA_Y"}      
         return result_buttons, result_axes
+
+joystick = RoboJoystick(os_num = 1)
+joystick.running = True
+while (joystick.running):
+    joystick.get_events()
+    if joystick.button_updated("A") and not joystick.get_button("A"):
+        print("A")
+    elif joystick.button_updated("B") and not joystick.get_button("B"):
+        print("B")
+    elif joystick.button_updated("X") and not joystick.get_button("X"):
+        print("X")
+    elif joystick.button_updated("Y") and not joystick.get_button("Y"):
+        print("Y")
+    elif joystick.button_updated("LB") and not joystick.get_button("LB"):
+        print("LB")
+    elif joystick.button_updated("RB") and not joystick.get_button("RB"):
+        print("RB")
+    elif joystick.button_updated("START") and not joystick.get_button("START"):
+        print("START")
+    # elif joystick.button_updated("BACK") and not joystick.get_button("BACK"):
+    #     print("BACK")        
+    # elif joystick.axis_updated("RA_X"):
+    #     print("RA_X")
+    # elif joystick.axis_updated("RA_Y"):
+    #     print("RA_Y")
+    elif joystick.axis_updated("LA_X"):
+        print("LA_X")
+    elif joystick.axis_updated("LA_Y"):
+        print("LA_Y")
+    elif joystick.dpad_updated() and joystick.dpad != (0,0):
+        print(joystick.dpad)
