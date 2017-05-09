@@ -47,8 +47,8 @@ void centroid_polygon(float &cx, float &cy, float x_coords[], float y_coords[], 
                      (x_coords[i]*y_coords[(i+1)%legs]-
                       x_coords[(i+1)%legs]*y_coords[i]);
     }
-    *cx = centroid_x/(6*area);
-    *cy = centroid_y/(6*area);
+    cx = centroid_x/(6*area);
+    cy = centroid_y/(6*area);
 }
 
 void centroid_triangle(float& cx, float& cy, float x_coords[], float y_coords[], int legs){

@@ -69,7 +69,24 @@ void Body::update_COM(){
 }
 
 void Body::balance(){
-
+  if (true){ //!in_triangle(cx, cy)
+    float cx_triangle, cy_triangle;
+    centroid_triangle(cx_triangle, cy_triangle, x_coords, y_coords, num_legs);
+    float dx = cx_triangle - cx;
+    float dy = cy_triangle - cy;
+    if (dx < 0 && dy < 0)
+      dy++;
+    else if (dx < 0 && dy > 0)
+      dy++;
+    else if (dx > 0 && dy < 0)
+      dy++;
+    else if (dx > 0 && dy > 0)
+      dy++;
+    else if (dx == 0)
+      dy++;
+    else if (dy == 0)
+      dy++;
+  }
 }
 
 /* MOVEMENT */
@@ -77,23 +94,23 @@ void Body::balance(){
 //Rotate in place around y axis
 void Body::IK_pos(float &x2, float &z2, float &dist, float &angle, int leg){
   float x1 = x2; float z1 = z2;
-  x2 = x1 + X_OFF;
-  z2 = z1 + Y_OFF;
-  dist = sqrt(x2*x2 + y2* y2);
+  x2 = x1 + XOFF;
+  z2 = z1 + YOFF;
+  dist = sqrt(x2*x2 + z2* z2);
   x2 = leg <= (num_legs-1)/2 ? x2 : -x2;
-  z2 = leg % 
-  angle = atan2(y2,x2);
+  z2 = z2;
+  angle = atan2(z2,x2);
 }
 
 void Body::rotate_y(int d_theta){
   float old_x, old_z, dist, angle;
-  float new_x, new_z, IK_x, IK_y;
+  float new_x, new_z, IK_x, IK_z;
   for(int leg = 0; leg < num_legs; leg++){
     old_x = x_coords[leg];
     old_z = z_coords[leg];
     IK_pos(old_x, old_z, dist, angle, leg);
     new_x = dist*cos(d_theta+angle);
-    new_y = dist*sin(d_teta+angle);
+    new_z = dist*sin(d_theta+angle);
     IK_x = new_x - old_x;
     IK_z = new_z - old_z;
     set_position_leg(leg, x_coords[leg]+IK_x, y_coords[leg], z_coords[leg]+ IK_z);
@@ -116,6 +133,8 @@ void Body::rotate_xz(float x_rotation, float z_rotation){
 
 //Shifts center of the body by specified offset
 //Body should be stationary
+/*
+DEPRECATED
 void Body::shift(float dx, float dy){
     if (mode == BODY){
         float right_x1 = legs[0].current_x;
@@ -132,6 +151,7 @@ void Body::shift(float dx, float dy){
         set_position_leg(3, left_x1, y_coords[3], front_z1);
     }
 }
+*/
 
 void Body::gait_next(){
     float result[12];
@@ -139,7 +159,7 @@ void Body::gait_next(){
     //Serial.println(result[0]);
     //Serial.println(result[1]);
     //Serial.println(result[2]);
-    if(gait.gait_count > 1 && !gait.is_reversed())
+    if(gait.gait_count > 3 && !gait.is_reversed())
       gait.reverse();
     set_position_leg(0, result[0], result[1], result[2], true);
     //delay(200);
@@ -159,7 +179,7 @@ void Body::read_IMU(){
 
 void Body::send_pose(){
     //int tilt_angle = calculate_tilt();
-    print_val("Tilt: ", tilt_angle);
+    //print_val("Tilt: ", tilt_angle);
     float leg_pose[3];
     legs[0].get_position(leg_pose);
     print_val("Leg 1: ", leg_pose[0]);
@@ -182,7 +202,7 @@ void Body::send_pose(){
 
 /* THIS SHOULD UPDATE THE PARAMETERS THAT THE BODY NEEDS TO KNOW
    FROM THE LEGS AND ALSO MAKE THE LEGS UPDATE THEMSELVES */
-    print_val("Leg 4: ", leg_pose[0]);
+   // print_val("Leg 4: ", leg_pose[0]);
 
 void Body::set_position_leg(int leg, float x, float y, float z, bool no_x = false){
     float answer[3];

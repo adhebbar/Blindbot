@@ -18,10 +18,12 @@ int Gait::next(float coords[]){
   	if (gait_step == 1 && leg_index == leg){
   		legs[leg].x = L - 15.0;
   		legs[leg].y = leg_height*0.75;
+      	//legs[(leg+2)%4].y -= 10.0;
   		gait_step++;
   	}
   	else if(gait_step == 2 && leg_index == leg){
   		legs[leg].y = leg_height*0.5;
+     	//legs[(leg+2)%4].y -= 30.0;
   		if(leg % 3 == 0) legs[leg].z = is_reversed() ? 10+walk_length/2.0 : 10;
       else legs[leg].z = !is_reversed() ? -Z_ZERO : 0;
   		gait_step++;
@@ -32,6 +34,7 @@ int Gait::next(float coords[]){
   		gait_step++;
   	}
   	else if (gait_step == 4 && leg_index == leg){
+      	//legs[(leg+2)%4].y = leg_height;
   		legs[leg].y = leg_height;
   		gait_step++;
   	}
